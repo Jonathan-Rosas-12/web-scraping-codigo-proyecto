@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #Librerias 
-from scrapy.item import Field, Item
+'''from scrapy.item import Field, Item
 from scrapy.spiders import CrawlSpider, Rule, Spider
 from scrapy.selector import Selector
 from scrapy.loader import ItemLoader
@@ -63,5 +63,23 @@ process= CrawlerProcess({
     'FEED_URI': 'lib.json'
     })
 process.crawl(Crawler)
-process.start()     
+process.start()'''
+from time import sleep
+from selenium import webdriver
+
+
+driver = webdriver.Chrome(executable_path=r"C:\dChrome\chromedriver.exe")
+driver.get('http://sigeh.hidalgo.gob.mx/pags/crear_consulta.php')
+sleep(4)
+driver.refresh() # Solucion de un bug extraño en Windows en donde los anuncios solo cargan al hacerle refresh o al darle click a algun elemento
+sleep(5)
+
+boton = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/ul/li[1]')
+boton.click()
+sleep(3)
+boton2 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select/option[2]')
+boton2.click()
+sleep(4)  
+
+driver.close()     
      
