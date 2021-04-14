@@ -57,4 +57,11 @@ class Spider(Spider):
 
     download_delay = sleep(random.uniform(1.0, 4.0))
     
+
+process= CrawlerProcess({
+    'FEED_FORMAT':'json',
+    'FEED_URI': 'lib.json'
+    })
+process.crawl(Crawler)
+process.start()     
      
