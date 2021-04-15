@@ -71,15 +71,43 @@ from selenium import webdriver
 driver = webdriver.Chrome(executable_path=r"C:\dChrome\chromedriver.exe")
 driver.get('http://sigeh.hidalgo.gob.mx/pags/crear_consulta.php')
 sleep(4)
-driver.refresh() # Solucion de un bug extraño en Windows en donde los anuncios solo cargan al hacerle refresh o al darle click a algun elemento
-sleep(5)
+driver.refresh() 
+sleep(2)
+try:
+    boton = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/ul/li[1]')
+    boton.click()
+    sleep(3)
+    boton1 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select')
+    boton1.click()
+    sleep(2)
 
-boton = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/ul/li[1]')
-boton.click()
-sleep(3)
-boton2 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select/option[2]')
-boton2.click()
-sleep(4)  
+    boton2 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select/option[2]')
+    boton2.click()
+    sleep(3)
+    print('Municipio: '+boton2.text)
 
+    boton3= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/div/div/div/label/input[1]')  
+    boton3.click()
+    sleep(2)
+    boton0= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/div/div/div[2]/label/input[1]')  
+    boton0.click()
+    sleep(3)
+
+    boton4=  driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/button')
+    boton4.click()
+    sleep(11)
+    titulos= driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/h2')
+    fuentes = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/p')
+    i=0
+    for i in range(len(titulos)):
+        print(titulos[i].text)
+        print(fuentes[i].text)
+        
+    
+    boton5= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/article/h3/a')
+    boton5.click()
+    sleep(8)
+except:
+    print('Error')
 driver.close()     
      
