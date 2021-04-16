@@ -66,48 +66,67 @@ process.crawl(Crawler)
 process.start()'''
 from time import sleep
 from selenium import webdriver
-
+import random
 
 driver = webdriver.Chrome(executable_path=r"C:\dChrome\chromedriver.exe")
 driver.get('http://sigeh.hidalgo.gob.mx/pags/crear_consulta.php')
-sleep(4)
+sleep(random.uniform(3.0, 4.0))
 driver.refresh() 
-sleep(2)
+sleep(random.uniform(2.0, 4.0))
 try:
     boton = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/ul/li[1]')
     boton.click()
-    sleep(3)
+    sleep(random.uniform(3.0, 4.0))
     boton1 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select')
     boton1.click()
-    sleep(2)
+    sleep(random.uniform(2.0, 4.0))
 
     boton2 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select/option[2]')
     boton2.click()
-    sleep(3)
+    sleep(random.uniform(5.0, 6.0))
     print('Municipio: '+boton2.text)
 
     boton3= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/div/div/div/label/input[1]')  
     boton3.click()
-    sleep(2)
+    sleep(random.uniform(3.0, 4.0))
     boton0= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/div/div/div[2]/label/input[1]')  
     boton0.click()
-    sleep(3)
+    sleep(random.uniform(2.0, 4.0))
 
     boton4=  driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/button')
     boton4.click()
-    sleep(11)
+    sleep(random.uniform(10.0, 12.0))
     titulos= driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/h2')
     fuentes = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/p')
     i=0
+    
+    
+    
     for i in range(len(titulos)):
+        a= str(i+3)
         print(titulos[i].text)
         print(fuentes[i].text)
-        
-    
+        conceptos = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr/th')
+        valores = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr/td')
+        print('Concepto: ')
+        for j in range(len(conceptos)):
+            b = str(j+1)
+            c = '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/th'
+            concepto = driver.find_element_by_xpath(c)
+            print (concepto.text) 
+        print('valor: ')
+        a= str(i+3)
+        for k in range(len(valores)):
+            b = str(k+1)
+            c= '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/td'
+            valor = driver.find_element_by_xpath(c)
+            print(valor.text)
+            
     boton5= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/article/h3/a')
     boton5.click()
-    sleep(8)
+    sleep(random.uniform(4.0, 6.0))
 except:
     print('Error')
-driver.close()     
+driver.close()
+
      
