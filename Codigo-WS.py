@@ -121,9 +121,9 @@ try:
                 b = str(j+1)
                 c = '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/th'
                 concepto = driver.find_element_by_xpath(c)
-                print (concepto.text) 
-                print('valor: ')
-                a= str(i+3)
+            print (concepto.text) 
+            print('valor: ')
+            a= str(i+3)
             for k in range(len(valores)):
                 b = str(k+1)
                 c= '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/td'
