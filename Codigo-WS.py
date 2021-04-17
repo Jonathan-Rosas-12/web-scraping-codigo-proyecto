@@ -67,6 +67,7 @@ process.start()'''
 from time import sleep
 from selenium import webdriver
 import random
+import pandas as pd
 
 driver = webdriver.Chrome(executable_path=r"C:\dChrome\chromedriver.exe")
 driver.get('http://sigeh.hidalgo.gob.mx/pags/crear_consulta.php')
@@ -76,7 +77,9 @@ sleep(random.uniform(2.0, 4.0))
 contador =0
 try:
     
-    while contador <84:
+    while contador <1:
+        archivo = "consul_municipio.csv"
+        csv= open(archivo,"w")
         seleccion = str(contador+2)
         boton = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/ul/li[1]')
         boton.click()
@@ -87,8 +90,10 @@ try:
 
         boton2 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select/option['+seleccion+']')
         boton2.click()
+        csv.write(boton2.text)
+        csv.write("\n")
         sleep(random.uniform(5.0, 6.0))
-        print('Municipio: '+boton2.text)
+        
 
         for j in range(3):
             a = str(j+1)
@@ -109,26 +114,30 @@ try:
         titulos= driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/h2')
         fuentes = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/p')
         i=0
+        
 
         for i in range(len(titulos)):
             a= str(i+3)
-            print(titulos[i].text)
-            print(fuentes[i].text)
+            titulo= titulos[i].text
+            csv.write(titulo)
+            fuente=fuentes[i].text
+            csv.write("\n")
+            csv.write(fuente)
+            csv.write("\n")
+            titulor= "Concepto,valor\n"
+            csv.write(titulor)
             conceptos = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr/th')
             valores = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr/td')
-            print('Concepto: ')
+            
             for j in range(len(conceptos)):
                 b = str(j+1)
                 c = '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/th'
                 concepto = driver.find_element_by_xpath(c)
-            print (concepto.text) 
-            print('valor: ')
-            a= str(i+3)
-            for k in range(len(valores)):
-                b = str(k+1)
-                c= '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/td'
-                valor = driver.find_element_by_xpath(c)
-                print(valor.text)
+                
+                d= '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/td'
+                valor = driver.find_element_by_xpath(d)
+                filas = concepto.text+","+valor.text+"\n"
+                csv.write(filas)
             
         boton5= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/article/h3/a')
         boton5.click()
@@ -138,4 +147,4 @@ try:
         
 except:
     print('Error')
-driver.close()  
+driver.close()
