@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>W-Web</title>
+	<meta name="description" content="Sitio de web scraping de la empresa Xolotl Creative Labs"/>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/EstilosSitioWeb.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	
+</head>
+<body>
+	<header>
+		<div class="container-fluid d-flex align-items-center">
+			<div class="row justify-content-left" >
+				<h1 class="text-left">W-Web</h1>	
+			</div>
+	    </div>
+		
+	</header>
+	{% block content %}
+    {% endblock %}
+    <div id="footer" class="p-3">
+		<div class="container w-20 pt-5">
+		  <div class="row justify-content-center font-weight-light">
+			<h4>X&oacute;lotl Creative Labs</h4>
+                
+		</div> 
+	</div>	 
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+</body>
+</html>

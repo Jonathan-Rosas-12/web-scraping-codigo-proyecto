@@ -1,150 +1,152 @@
-# -*- coding: utf-8 -*-
-#Librerias 
-'''from scrapy.item import Field, Item
-from scrapy.spiders import CrawlSpider, Rule, Spider
-from scrapy.selector import Selector
-from scrapy.loader import ItemLoader
-from scrapy.crawler import CrawlerProcess
-from scrapy.loader.processors import MapCompose
-from scrapy.linkextractors import LinkExtractor
 from selenium import webdriver
-import random
-from time import sleep
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
-numItems=0
-dominiosP=''
-semilla=''
-#Item a extraer
+import urllib
+from urllib import request
+from urllib.parse import urlparse
+from flask import Flask, render_template, redirect, url_for, request
+from selenium.webdriver.chrome.options import Options
 
-class item(Item):
-    dato1=Field()
-    dato2=Field()
-    dato3=Field()
+app=Flask(__name__)
+@app.route('/')
+def home():    
+       return render_template('SitioWeb.html')
+
+@app.route('/extraccion', methods=['POST', 'GET'])
+def extraccion():
+    liga=request.form['link']
+    xpath1=request.form['xpath1']
+    xpath2=request.form['xpath2']
+    xpath3=request.form['xpath3']
+    xpath4=request.form['xpath4']
+    nItems=request.form['numberI']
+    archivo=request.form['docdest']
     
-#Crawler/Spider 
-
-class Crawler(CrawlSpider):
-    name='Crawler'
-    custom_settings = {
-      'USER_AGENT': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/71.0.3578.80 Chrome/71.0.3578.80 Safari/537.36',
-      'CLOSESPIDER_PAGECOUNT': numItems
-    }
-    allowed_domains = [dominiosP]
-
-    start_urls = [semilla]
-
-    download_delay = sleep(random.uniform(1.0, 4.0))
+    validadorNItems=nItems.isdigit()
+    partes=urlparse(liga)
+    if(partes.scheme==""):
+         return render_template('ErrorExtraccion.html')
+    resp=urllib.request.urlopen(liga)
+    validacionU=resp.code
+    if(validacionU!=200):
+          return render_template('ErrorExtraccion.html')
+    if(validadorNItems==False):
+         return render_template('ErrorExtraccion.html')
+    nItems=int(nItems)
+    chrome_options=Options()
+    chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=r"./chromedriver.exe")
+    driver.get(liga) 
+    contador =0
+    if archivo==".csv":
+        csv= open("archivo8.csv","w")
     
-    rules = (
-        Rule( 
-            LinkExtractor(
-                allow=r'/ciencia-ficcion/d+'
-            ), follow=True),
-        Rule( 
-            LinkExtractor(
-                allow=r'/ebook/' 
-            ), follow=True, callback='parse_items'), 
-    )
-class Spider(Spider):
-    name='Spider'
-    custom_settings = {
-      'USER_AGENT': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/71.0.3578.80 Chrome/71.0.3578.80 Safari/537.36',
-
-    }
-    allowed_domains = ['tuslibros.com']
-
-    start_urls = ['https://www.tuslibros.com/categoria/ciencia-ficcion']
-
-    download_delay = sleep(random.uniform(1.0, 4.0))
+    try:
     
+        while contador < nItems:
+              
+              
+              seleccion = str(contador+2)
+              boton = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/ul/li[1]')
+              boton.click()
+              WebDriverWait(driver,10).until(
+                  EC.presence_of_all_elements_located((By.XPATH, '//div[@class="container landing-wrapper"]')
+                  ))
+              
 
-process= CrawlerProcess({
-    'FEED_FORMAT':'json',
-    'FEED_URI': 'lib.json'
-    })
-process.crawl(Crawler)
-process.start()'''
-from time import sleep
-from selenium import webdriver
-import random
-import pandas as pd
+              boton2 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select/option['+seleccion+']')
+              boton2.click()
+              csv.write(boton2.text)
+              csv.write("\n")
+        
+              botones= driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/div/div/div/label/input')
+              for i in range(len(botones)):
+                  boton3 = botones[i]
+                  boton3.click()
+                  
+              boton4= WebDriverWait(driver,10).until(
+                  EC.presence_of_element_located((By.XPATH, '//div[@class="container landing-wrapper"]/div/div/div/form/div/button')
+                  ))    
 
-driver = webdriver.Chrome(executable_path=r"C:\dChrome\chromedriver.exe")
-driver.get('http://sigeh.hidalgo.gob.mx/pags/crear_consulta.php')
-sleep(random.uniform(3.0, 4.0))
-driver.refresh() 
-sleep(random.uniform(2.0, 4.0))
-contador =0
-try:
+              boton4.click()
+                          
+              
+              WebDriverWait(driver,8).until(
+                        EC.presence_of_all_elements_located((By.XPATH, '//div[@class="container landing-wrapper"]')
+                        ))
+
+              titulos= driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/h2')
+              fuentes = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/p')
+
+              for i in range(len(titulos)):
+                    a= str(i+3)
+                    if xpath1=="titulos" or xpath2=="titulos" or xpath3=="titulos" or xpath4=="titulos":
+                        titulo= titulos[i].text
+                        titulo = titulo.replace(',',' ')
+                        csv.write(titulo)
+                        csv.write("\n")
+                    if xpath1=="fuentes" or xpath2=="fuentes" or xpath3=="fuentes" or xpath4=="fuentes":
+                        fuente=fuentes[i].text
+                        fuente= fuente.replace(',',' ')
+                        csv.write(fuente)
+                        csv.write("\n")
+                    if xpath1=="conceptos" or xpath2=="conceptos" or xpath3=="conceptos" or xpath4=="conceptos":
+                        if xpath1=="valores" or xpath2=="valores" or xpath3=="valores" or xpath4=="valores":
+                            titulor= "Concepto,valor\n"
+                            csv.write(titulor)
+
+                    conceptos = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr/th')
+                    
+                    
+                    for j in range(len(conceptos)):
+                        b = str(j+1)
+                        if xpath1=="conceptos" or xpath2=="conceptos" or xpath3=="conceptos" or xpath4=="conceptos":
+                            c = '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/th'
+                            concepto = driver.find_element_by_xpath(c).text
+                            concepto = concepto.replace(',',' ')
+                            if xpath1=="valores" or xpath2=="valores" or xpath3=="valores" or xpath4=="valores":
+                                c = '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/th'
+                                concepto = driver.find_element_by_xpath(c).text
+                                concepto = concepto.replace(',',' ')
+                                d= '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/td'
+                                valor = driver.find_element_by_xpath(d).text
+                                valor = valor.replace(',',' ')
+                                filas = concepto+","+valor+"\n"
+                                csv.write(filas)
+                            else:
+                                 csv.write(concepto)
+                                 csv.write("\n")
+                        else: 
+
+                            if xpath1=="valores" or xpath2=="valores" or xpath3=="valores" or xpath4=="valores":
+                                d= '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/td'
+                                valor = driver.find_element_by_xpath(d).text
+                                valor = valor.replace(',',' ')
+                                csv.write(valor)
+                                csv.write("\n")
+ 
+              boton5= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/article/h3/a')
+              boton5.click()
+              
+              WebDriverWait(driver,8).until(
+                  EC.presence_of_all_elements_located((By.XPATH, '//div[@class="container landing-wrapper"]')
+                  ))
+              
+              contador+=1
+              csv.write("\n")
+    except Exception as e:
+       print(e)
+       print('Error de extraccion')
+       return render_template('ErrorExtraccion.html')
+    driver.close()
+    print('Fin de la extraccion')
+    return render_template('Extraccion.html')    
+
+      
+if __name__=='__main__':
+    app.run(debug=True)    
     
-    while contador <1:
-        archivo = "consul_municipio.csv"
-        csv= open(archivo,"w")
-        seleccion = str(contador+2)
-        boton = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/ul/li[1]')
-        boton.click()
-        sleep(random.uniform(3.0, 4.0))
-        boton1 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select')
-        boton1.click()
-        sleep(random.uniform(2.0, 4.0))
+   
 
-        boton2 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select/option['+seleccion+']')
-        boton2.click()
-        csv.write(boton2.text)
-        csv.write("\n")
-        sleep(random.uniform(5.0, 6.0))
-        
-
-        for j in range(3):
-            a = str(j+1)
-            for k in range(4):
-                b = str(k+1)
-                c= '//div[@class="container landing-wrapper"]/div/div/div/form/div/div/div/div['+a+']/div['+b+']/label/input'
-                boton3 = driver.find_element_by_xpath(c)
-                boton3.click()
-                sleep(random.uniform(3.0, 4.0))
-            
-        boton0= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div[2]/div/div/div/label/input')  
-        boton0.click()
-        sleep(random.uniform(2.0, 4.0))
-
-        boton4=  driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/button')
-        boton4.click()
-        sleep(random.uniform(10.0, 12.0))
-        titulos= driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/h2')
-        fuentes = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/p')
-        i=0
-        
-
-        for i in range(len(titulos)):
-            a= str(i+3)
-            titulo= titulos[i].text
-            csv.write(titulo)
-            fuente=fuentes[i].text
-            csv.write("\n")
-            csv.write(fuente)
-            csv.write("\n")
-            titulor= "Concepto,valor\n"
-            csv.write(titulor)
-            conceptos = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr/th')
-            valores = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr/td')
-            
-            for j in range(len(conceptos)):
-                b = str(j+1)
-                c = '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/th'
-                concepto = driver.find_element_by_xpath(c)
-                
-                d= '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/td'
-                valor = driver.find_element_by_xpath(d)
-                filas = concepto.text+","+valor.text+"\n"
-                csv.write(filas)
-            
-        boton5= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/article/h3/a')
-        boton5.click()
-        
-        sleep(random.uniform(4.0, 6.0))
-        contador+=1
-        
-except:
-    print('Error')
-driver.close()
