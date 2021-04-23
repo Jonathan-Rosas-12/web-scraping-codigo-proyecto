@@ -40,8 +40,8 @@ def extraccion():
     driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=r"./chromedriver.exe")
     driver.get(liga) 
     contador =0
-    if archivo==".csv":
-        csv= open("archivo8.csv","w")
+    documento="ArchivoE"+archivo
+    DE= open(documento,"w")
     
     try:
     
@@ -58,8 +58,8 @@ def extraccion():
 
               boton2 = driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/select/option['+seleccion+']')
               boton2.click()
-              csv.write(boton2.text)
-              csv.write("\n")
+              DE.write(boton2.text)
+              DE.write("\n")
         
               botones= driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div/div/div/form/div/div/div/div/div/label/input')
               for i in range(len(botones)):
@@ -79,23 +79,23 @@ def extraccion():
 
               titulos= driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/h2')
               fuentes = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/p')
-
+              
               for i in range(len(titulos)):
                     a= str(i+3)
                     if xpath1=="titulos" or xpath2=="titulos" or xpath3=="titulos" or xpath4=="titulos":
                         titulo= titulos[i].text
                         titulo = titulo.replace(',',' ')
-                        csv.write(titulo)
-                        csv.write("\n")
+                        DE.write(titulo)
+                        DE.write("\n")
                     if xpath1=="fuentes" or xpath2=="fuentes" or xpath3=="fuentes" or xpath4=="fuentes":
                         fuente=fuentes[i].text
                         fuente= fuente.replace(',',' ')
-                        csv.write(fuente)
-                        csv.write("\n")
+                        DE.write(fuente)
+                        DE.write("\n")
                     if xpath1=="conceptos" or xpath2=="conceptos" or xpath3=="conceptos" or xpath4=="conceptos":
                         if xpath1=="valores" or xpath2=="valores" or xpath3=="valores" or xpath4=="valores":
                             titulor= "Concepto,valor\n"
-                            csv.write(titulor)
+                            DE.write(titulor)
 
                     conceptos = driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr/th')
                     
@@ -114,18 +114,18 @@ def extraccion():
                                 valor = driver.find_element_by_xpath(d).text
                                 valor = valor.replace(',',' ')
                                 filas = concepto+","+valor+"\n"
-                                csv.write(filas)
+                                DE.write(filas)
                             else:
-                                 csv.write(concepto)
-                                 csv.write("\n")
+                                 DE.write(concepto)
+                                 DE.write("\n")
                         else: 
 
                             if xpath1=="valores" or xpath2=="valores" or xpath3=="valores" or xpath4=="valores":
                                 d= '//div[@class="container landing-wrapper"]/div'+'['+a+']'+'/table/tbody/tr'+'['+b+']'+'/td'
                                 valor = driver.find_element_by_xpath(d).text
                                 valor = valor.replace(',',' ')
-                                csv.write(valor)
-                                csv.write("\n")
+                                DE.write(valor)
+                                DE.write("\n")
  
               boton5= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/article/h3/a')
               boton5.click()
@@ -135,14 +135,14 @@ def extraccion():
                   ))
               
               contador+=1
-              csv.write("\n")
+              DE.write("\n")
     except Exception as e:
        print(e)
        print('Error de extraccion')
        return render_template('ErrorExtraccion.html')
     driver.close()
     print('Fin de la extraccion')
-    return render_template('Extraccion.html')    
+    return render_template('Extraccion.html', doc=documento)    
 
       
 if __name__=='__main__':

@@ -110,6 +110,11 @@ p{
 
 }
 
+#descarga{
+  margin:0px 20px 20px 30px;
+  text-align: center;
+}
+
 .ext{
   text-align: center;
   display: inline-block;
