@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+{% block content %}
+<div id="main">
+	<form action="/extraccion" method="POST">
+		<div class="container-md p-2">
+			<div class="row row-cols-1 row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-2 p-5">
+				<div class="col-sm justify-content-left">
+					<h2 class="USemi">URL Semilla</h2>
+
+					<div class="Semilla">
+						<label for="Semiurl">Ingrese la URL: </label>
+						<input class="form-control" name="link" type="text" placeholder="Search" aria-label="Search">
+					</div>
+					<h2 class="Tdat">Datos a extraer</h2>
+					<div class="Datos">
+						<label for="Exdatos1">Elige el primer tipo de dato a extraer: </label>
+						<select name="xpath1" id="x1" class="form-select" aria-label="Default select example">
+							<option selected>-Abrir men&uacute; de selecci&oacute;n-</option>
+							<option value="titulos">T&iacute;tulos</option>
+							<option value="fuentes">Fuentes</option>
+							<option value="conceptos">Conceptos</option>
+							<option value="valores">Valores</option>
+							<option value="descripcion">Descripci&oacute;n</option>
+							<option value="temporalidad">Temporalidad</option>
+					    </select>
+						<label for="Exdatos2">Elige el segundo tipo de dato a extraer: </label>
+						<select name="xpath2" id="x2" class="form-select" aria-label="Default select example">
+							<option selected>-Abrir men&uacute; de selecci&oacute;n-</option>
+							<option value="titulos">T&iacute;tulos</option>
+							<option value="fuentes">Fuentes</option>
+							<option value="conceptos">Conceptos</option>
+							<option value="valores">Valores</option>
+							<option value="descripcion">Descripci&oacute;n</option>
+							<option value="temporalidad">Temporalidad</option>
+					    </select>
+						<label for="Exdatos3">Elige el tercer tipo de dato a extraer: </label>
+						<select name="xpath3" id="x3" class="form-select" aria-label="Default select example">
+							<option selected>-Abrir men&uacute; de selecci&oacute;n-</option>
+							<option value="titulos">T&iacute;tulos</option>
+							<option value="fuentes">Fuentes</option>
+							<option value="conceptos">Conceptos</option>
+							<option value="valores">Valores</option>
+							<option value="descripcion">Descripci&oacute;n</option>
+							<option value="temporalidad">Temporalidad</option>
+					    </select>
+						<label for="Exdatos4">Elige el cuarto tipo de dato a extraer: </label>
+						<select name="xpath4" id="x4" class="form-select" aria-label="Default select example">
+							<option selected>-Abrir men&uacute; de selecci&oacute;n-</option>
+							<option value="titulos">T&iacute;tulos</option>
+							<option value="fuentes">Fuentes</option>
+							<option value="conceptos">Conceptos</option>
+							<option value="valores">Valores</option>
+							<option value="descripcion">Descripci&oacute;n</option>
+							<option value="temporalidad">Temporalidad</option>
+					    </select>
+					</div>
+					<div class="Salida">
+						<label for="Nitems">Ingrese el total de items a extraer : </label>
+						<input class="form-control" type="text" name="numberI"
+							placeholder="Cantidad de items" aria-label="Search">
+						<br>	
+						<label for="Fsalida">Elige el formato del archivo a generar: </label>
+						<select name="docdest" id="arch" class="form-select" aria-label="Default select example">
+							<option selected>-Abrir men&uacute; de selecci&oacute;n-</option>
+							<option value=".csv">CSV</option>
+							<option value=".json">JSON</option>
+							<option value=".txt">TXT</option>
+							<option value=".xlsx">Hoja de c&aacute;lculo(XLSX)</option>
+							<option value=".docx">Documento de Word(DOCX)</option>
+						</select>
+					</div>
+					<div class="Boton">
+						<input class="btn btn-info" type="submit" value="Extraer datos"></input>
+						<br/>
+						<br/>
+						<div class="InfoXpath">
+							<!-- Button trigger modal -->
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+							 -Informaci&oacute;n de uso-
+							</button>
+						
+							<!-- Modal -->
+							<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+							   <div class="modal-dialog">
+								 <div class="modal-content">
+								   <div class="modal-header">
+									  <h5 class="modal-title" id="exampleModalLabel">=Pasos para usar el sitio=</h5>
+									  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								   </div>
+								   <div class="modal-body">
+									<p>Para poder extraer datos de sitios web desde esta p&aacute;gina debes considerar la siguiente informaci&oacute;n.</p><br>
+									 <p><bold>Si buscas extraer datos de un sitio web sigue los siguientes pasos:</bold></p><br>
+									 <ol class="instrucciones">
+										<li>Introduce la URL completa del sitio del cual quieres extraer la informaci&oacute;n, puedes copiarla desde el navegador</li>
+										<li>Elige los datos a extraer de la p&aacute;gina, se te desplegar&aacute; una lista de posibilidades en cada una de las cuatro barras de selecci&oacute;n </li>
+										<li>En la parte del n&uacute;mero de items, debes de ingresar el total de conjuntos datos que quieres extraer, por ejemplo si hablamos de tablas
+											de datos, cada una de una zona en especif&iacute;co, la cantidad de items ser&iacute;a el n&uacute;mero total de zonas que se desean extraer, cada una con sus tablas de datos correspondientes
+										</li>
+										<li>Por &uacute;ltimo elige un formato en el que deseas generar el archivo donde se guardar&aacute; la informaci&oacute;n obtenida, y clic en "Extraer datos"</li>
+										<li>La p&aacute;gina te indicar&aacute; si la extracci&oacute;n fue &eacute;xitosa o si hubo alg&uacute;n error, si lo &uacute;ltimo pasa, regresa e introduce de nuevo los datos, en caso de que persista, lo m&aacute;s probable es que el sitio web no sea v&aacute;lido o este ca&iacute;do</li>
+									 </ol>
+								   </div>
+								   <div>
+									   <img src="{{ url_for('static', filename='img/Extraccion1.jpg') }}" width="500" alt="Imagen ejemplo 1" title="Imagen ejemplo de extraccion completa"/><br/>
+									   <img src="{{ url_for('static', filename='img/Error1.jpg') }}" width="500" alt="Imagen ejemplo 2" title="Imagen ejemplo de error de extraccion"/>
+								   </div>
+								   <div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+								   </div>
+								 </div>
+							   </div>
+							</div>
+						</div>
+					</div>
+					
+	</form>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

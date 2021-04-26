@@ -40,7 +40,8 @@ def extraccion():
     driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=r"./chromedriver.exe")
     driver.get(liga) 
     contador =0
-    documento="ArchivoE"+archivo
+    datos="ArchivoE"+archivo
+    documento="templates/ArchivoE"+archivo
     DE= open(documento,"w")
     
     try:
@@ -142,7 +143,8 @@ def extraccion():
        return render_template('ErrorExtraccion.html')
     driver.close()
     print('Fin de la extraccion')
-    return render_template('Extraccion.html', doc=documento)    
+    DE.close()
+    return render_template('Extraccion.html', doc=datos, dat=documento)    
 
       
 if __name__=='__main__':
