@@ -13,7 +13,7 @@ from flask import Flask, render_template, redirect, url_for, request
 app=Flask(__name__)
 @app.route('/')
 def home():    
-       return render_template('SitioWeb2.html')
+       return render_template('SitioWeb-Sigeh-Principal.html')
 
 @app.route('/extraccion', methods=['POST', 'GET'])
 def extraccion():
@@ -36,21 +36,20 @@ def extraccion():
     if(validadorNItems==False):
          return render_template('ErrorExtraccion.html')
     nItems=int(nItems)
-    #chrome_options = Options()
-    #chrome_options.add_argument("--headless")
-    #driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=r"./chromedriver.exe")
-    driver = webdriver.Chrome(executable_path=r"./chromedriver.exe")
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=r"./chromedriver.exe")
     driver.get(liga)
-    sleep(random.uniform(3.0, 4.0))
+    sleep(random.uniform(2.0, 3.0))
     driver.refresh() 
-    sleep(random.uniform(2.0, 4.0))
-    datos="DatosE"+archivo
-    documento = "docs/DatosE"+archivo
+    sleep(random.uniform(2.0, 3.0))
+    datos="DatosE-Principal-Sigeh"+archivo
+    documento = "docs/DatosE-Principal-Sigeh"+archivo
     DE= open(documento,"w")
     try:
         
         for i in range(nItems):
-            sleep(random.uniform(5.0, 7.0))
+            sleep(random.uniform(3.0, 4.0))
             indicadores= driver.find_elements_by_xpath('//div[@class="col-lg-12"]/div/div/div/h4/a')
             a=str(i+2)
             ejes= driver.find_elements_by_xpath('//div[@class="container landing-wrapper"]/div['+a+']/div/div/div/div/ul/a')
@@ -60,14 +59,14 @@ def extraccion():
             for j in range(len(ejes)):
                 indicadores= driver.find_elements_by_xpath('//div[@class="col-lg-12"]/div/div/div/h4/a')
                 indicador= indicadores[i]
-                sleep(random.uniform(5.0, 7.0))
+                sleep(random.uniform(3.0, 4.0))
                 k= str(j+1)
                 indicador.click()
             
-                sleep(random.uniform(3.0, 6.0))
+                sleep(random.uniform(3.0, 5.0))
                 indicador_consulta= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div['+a+']/div/div/div/div/ul['+k+']/a')
                 indicador_consulta.click()
-                sleep(random.uniform(2.0, 5.0))
+                sleep(random.uniform(2.0, 3.0))
                 if xpath1=="titulos" or xpath2=="titulos" or xpath3=="titulos" or xpath4=="titulos":
                     nombre_indicador= driver.find_element_by_xpath('//div[@class="container-fluid"]/div/div/div/div/h5')
                     fila1=" "+","+nombre_indicador.text
@@ -95,7 +94,7 @@ def extraccion():
                     DE.write(filas)
                 boton5= driver.find_element_by_xpath('//div[@class="container landing-wrapper"]/div/article/h3/a')
                 boton5.click()
-                sleep(random.uniform(3.0, 7.0))
+                sleep(random.uniform(2.0, 4.0))
                 
         
     except Exception as e:
