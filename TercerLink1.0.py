@@ -36,10 +36,10 @@ def extraccion():
     if(validadorNItems==False):
          return render_template('ErrorExtraccion.html')
     nItems=int(nItems)
-    #chrome_options = Options()
-    #chrome_options.add_argument("--headless")
-    #driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=r"C:\dChrome\chromedriver.exe")
-    driver = webdriver.Chrome(executable_path=r"./chromedriver.exe")
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(chrome_options=chrome_options, executable_path=r"C:\dChrome\chromedriver.exe")
+    #driver = webdriver.Chrome(executable_path=r"./chromedriver.exe")
     driver.get(liga)
     datos="Informacion-Poblacion"+archivo
     documento = "docs/Informacion-Poblacion"+archivo
