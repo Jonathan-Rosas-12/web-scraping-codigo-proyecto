@@ -45,8 +45,6 @@ def extraccion():
     documento = "docs/Informacion-Poblacion"+archivo
     DE= open(documento,"w")
     try:
-        #archivo = "Poblacion.csv"
-        #DE= open(archivo,"w")
     
         boton = WebDriverWait(driver,10).until(
                  EC.presence_of_element_located((By.XPATH, '//*[@id="Modalveda"]/div/div/div[1]/button/span'))
@@ -81,15 +79,16 @@ def extraccion():
         WebDriverWait(driver,6).until(
             EC.presence_of_all_elements_located((By.XPATH, '/html/body/div[2]/div/div/div')
             ))
-        informacion= driver.find_element_by_xpath('/html/body/div[2]/div/div/h2').text
-        informacion=informacion.replace(',',' ')
-        DE.write(informacion)
-        DE.write("\n")
-        parrafo1= driver.find_element_by_xpath('/html/body/div[2]/div/div/div/div/p').text
-        parrafo1=parrafo1.replace(',',' ')
-        DE.write(parrafo1)
-        DE.write(informacion+','+parrafo1+'\n')
-        DE.write("\n")
+        if xpath1=="titulos" or xpath2=="titulos" or xpath3=="titulos" or xpath4=="titulos":
+            informacion= driver.find_element_by_xpath('/html/body/div[2]/div/div/h2').text
+            informacion=informacion.replace(',',' ')
+            DE.write(informacion)
+            DE.write("\n")
+        if xpath1=="conceptos" or xpath2=="conceptos" or xpath3=="conceptos" or xpath4=="conceptos":
+            parrafo1= driver.find_element_by_xpath('/html/body/div[2]/div/div/div/div/p').text
+            parrafo1=parrafo1.replace(',',' ')
+            DE.write(parrafo1)
+            DE.write("\n")
         sleep(random.uniform(10.0, 12.0))
 
         for i in range(nItems):
